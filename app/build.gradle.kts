@@ -97,4 +97,6 @@ dependencies {
     implementation(libs.firebase.auth)
 
     debugImplementation(libs.androidx.ui.tooling)
+
+    testImplementation(libs.junit)
 }

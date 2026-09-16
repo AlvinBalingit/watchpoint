@@ -1,9 +1,10 @@
-# WatchPoint — Android front end
+# WatchPoint — Android app
 
-A local, front-end-only Android app built from the `[WatchPoint] APP LAYOUT` deck.
-Kotlin + Jetpack Compose, single activity, no backend and no network calls.
-Every one of the 15 screens in the deck is implemented, plus a closing summary
-screen so the flow can be demonstrated end to end.
+A daily mental-wellness companion for CCJEF (Criminology and Forensic Science)
+students. Kotlin + Jetpack Compose, single activity. Onboarding, a full daily
+check-in flow, a home dashboard, trends/weekly summaries, an exercise library,
+a 5-day starter program, streak goals, a private journal, and reminders all
+persist locally and back up to Firebase.
 
 ---
 
@@ -11,37 +12,41 @@ screen so the flow can be demonstrated end to end.
 
 1. **Android Studio → File → Open** → select this folder (the one with
    `settings.gradle.kts`).
-2. Let Gradle sync. If Studio reports a missing Gradle wrapper, accept its offer
-   to generate one, or run `gradle wrapper --gradle-version 8.9` from the project
-   root. `gradle/wrapper/gradle-wrapper.properties` is already set up; only the
-   binary `gradle-wrapper.jar` is absent, because it can't be distributed as
-   source.
-3. Run on a device or emulator with **API 24 or newer**.
+2. Let Gradle sync.
+3. This project is linked to a Firebase project (`watchpoint-da5f3`) via
+   `app/google-services.json`. To point it at your own Firebase project,
+   create one, enable Email/Password sign-in and Cloud Firestore, and replace
+   that file.
+4. To build a signed release, copy `keystore.properties.example` to
+   `keystore.properties` (gitignored) and fill in your own keystore path and
+   passwords, or set the equivalent `WATCHPOINT_STORE_FILE` /
+   `WATCHPOINT_STORE_PASSWORD` / `WATCHPOINT_KEY_ALIAS` /
+   `WATCHPOINT_KEY_PASSWORD` environment variables. The signing key itself
+   (`watchpoint-release.jks`) is intentionally not included in the project.
+5. Run on a device or emulator with **API 24 or newer**.
 
-Built against AGP 8.7.3 / Kotlin 2.0.21 / compileSdk 35. If your Studio is newer
-and prompts for an AGP upgrade, accepting it is safe.
+Built against AGP 8.7.3 / Kotlin 2.0.21 / compileSdk 35.
 
 ---
 
-## The flow
+## What it's built with
 
-| # | Screen | Route | Notes |
-|---|--------|-------|-------|
-| 1 | Welcome | `welcome` | Wordmark, Wabby, cream sheet |
-| 2 | Loading | `loading` | Auto-advances after 1.6 s, pops itself off the back stack |
-| 3 | Wabby greeting | `greeting` | |
-| 4 | Sign in | `auth` | Apple / Google / Email — all three just advance |
-| 5 | Quote | `quote` | |
-| 6 | How did you first join? | `source` | Next appears only once an option is picked (deck pages 6→7) |
-| 7 | How have you been lately? | `mood` | Tapping an answer advances immediately — no Next in the deck |
-| 8 | So glad to hear that | `reassurance` | |
-| 9 | Final step | `final_step` | |
-| 10 | Wake time | `wake_time` | step 1/5, opens a time picker |
-| 11 | Bedtime | `bed_time` | step 2/5 |
-| 12 | Interests | `interests` | step 3/5, multi-select 3×3 grid |
-| 13 | Support system | `support` | step 4/5 |
-| 14 | Age group | `age` | step 5/5 |
-| 15 | Summary | `summary` | Not in the deck — reads back every answer |
+| Tool | Role |
+|------|------|
+| Kotlin | Application language |
+| Jetpack Compose | UI |
+| Room | Local persistence (check-ins, journal, onboarding answers, exercise completions, program progress, streak goal, weekly reflections) |
+| DataStore | Small device-level preferences (reminder settings, quick-mode default) |
+| Firebase Authentication | Email/password accounts |
+| Cloud Firestore | Online backup of each account's data, scoped to `users/{uid}/...` |
+| Android AlarmManager | Daily check-in reminder and motivational-quote notifications |
+
+Room is the source of truth the UI reads from. `FirestoreSyncManager` pushes
+unsynced rows to Firestore whenever the device is online, and downloads the
+account's existing backup right after sign-in so a fresh install or a new
+device isn't empty. Logging out (or deleting the account) clears the local
+Room database so the next person signed in on the same phone can't see the
+previous account's data.
 
 ---
 
@@ -50,94 +55,68 @@ and prompts for an AGP upgrade, accepting it is safe.
 ```
 app/src/main/java/com/watchpoint/app/
 ├── MainActivity.kt                  single activity, edge to edge
+├── WatchPointApplication.kt         wires AppContainer, starts sync + reminders
 ├── navigation/
 │   ├── Route.kt                     one constant per destination
 │   └── WatchPointNavHost.kt         the whole graph + slide transitions
-├── onboarding/
-│   ├── OnboardingViewModel.kt       answers + the enums they come from
-│   └── screens/
-│       ├── IntroScreens.kt          deck 1–5
-│       ├── QuestionScreens.kt       deck 6–10
-│       ├── PersonalizeScreens.kt    deck 11–15
-│       └── SummaryScreen.kt         closing screen
-└── ui/
-    ├── theme/                       Color.kt, Type.kt, Theme.kt
-    └── components/
-        ├── Scaffold.kt              ForestBackground, WpScreen, ProgressDashes
-        ├── Controls.kt              PrimaryButton, AnswerPill, RadioRow, TimeChip
-        ├── Mascot.kt                MascotWithRing, Wordmark, QuestionTitle
-        └── InterestIcons.kt         the nine practice icons, drawn on Canvas
+├── auth/                            sign-up / sign-in / profile form state
+├── onboarding/                      first-time questions (enums + screens)
+├── checkin/                         daily check-in flow, dashboard, exercises,
+│                                     journal, reminders, streak goals
+├── settings/                        reminder preferences, account actions
+└── data/
+    ├── AppContainer.kt              manual service locator (no DI framework)
+    ├── db/                          Room entities, DAOs, migrations
+    ├── prefs/                       DataStore-backed settings
+    ├── remote/                      Firebase Auth + Firestore sync
+    └── repository/                  one repository per feature area
 ```
 
-`WpScreen` is the frame nearly every screen uses: textured background, optional
-back arrow, optional 5-dash progress indicator, and a bottom slot for the orange
-action. Adding a screen usually means writing a composable, wrapping it in
-`WpScreen`, and adding two lines to `WatchPointNavHost`.
+`WpScreen` is the frame nearly every onboarding/check-in screen uses: textured
+background, optional back arrow, optional progress indicator, and a bottom
+slot for the primary action.
 
 ---
 
 ## Design tokens
 
-Sampled from the deck rather than guessed:
-
 | Token | Hex | Used for |
 |-------|-----|----------|
 | `Forest` | `#072C07` | base background, under the texture |
-| `ForestInk` | `#08210A` | "Continue with Apple" |
-| `ForestPanel` | `#0D3A0C` | "Continue with Google", summary card |
+| `ForestInk` | `#08210A` | dark surfaces |
+| `ForestPanel` | `#0D3A0C` | cards, panels |
 | `Orange` | `#E1781C` | the single primary action per screen |
 | `Mint` | `#96E882` | answer pills, interest cards, time chip |
 | `SelectGreen` | `#5CC94B` | anything currently selected |
 | `AccentGreen` | `#8FD07E` | highlighted headline, filled progress dashes |
 | `Cream` | `#F1F0EC` | the account sheet |
 
-Rhythm and radii live in `WpSpace` and `WpShape` in `Theme.kt`, so spacing
-changes happen in one place.
+Rhythm and radii live in `WpSpace` and `WpShape` in `Theme.kt`.
 
 ---
 
 ## Assets
 
-The Wabby renders, HUD ring, sun, moon and forest texture were extracted from
-the source PDF with their transparency intact, so the app matches the mockup
-rather than approximating it. Twelve mascot poses ship in `res/drawable`,
-roughly 4 MB total, plus launcher icons at all five densities.
-
-The nine interest icons are **not** bitmaps — they're stroked paths drawn on a
-shared 100×100 grid in `InterestIcons.kt`. They stay sharp at any density and
-pick up the tint of whatever card they sit on.
+Wabby (the mascot), the HUD ring, sun, moon and forest texture ship in
+`res/drawable`, plus launcher icons at all five densities. The interest icons
+are stroked paths drawn on a shared grid in `InterestIcons.kt` rather than
+bitmaps, so they stay sharp at any density.
 
 ### Fonts
 
-The deck uses **Anton** for the wordmark and **Montserrat** for everything else.
-Neither is bundled. The app falls back to the platform sans-serif at matching
-weights, so it builds and runs as-is. To use the real faces, follow
-`app/src/main/res/font/README.md` — it's a four-file drop-in and a two-line edit
-in `Type.kt`.
-
-### Brand marks
-
-`ic_apple` and `ic_google` are placeholders lifted from the layout. Before
-shipping, replace them with the official assets from Apple's *Sign in with Apple*
-and Google's *Sign in with Google* branding guidelines — both companies require
-their own artwork on those buttons.
+The deck uses **Anton** for the wordmark and **Montserrat** for everything
+else. Neither is bundled; the app falls back to the platform sans-serif at
+matching weights. To use the real faces, see `app/src/main/res/font_README.md`.
 
 ---
 
-## What's deliberately not here
+## Data and privacy
 
-This is the front end only, so:
-
-- **No persistence.** `OnboardingViewModel` holds answers in memory and they're
-  gone when the process dies. Swapping it for a DataStore- or Room-backed
-  repository is the obvious next move and touches only that one file.
-- **No authentication.** All three buttons on the sign-in screen call the same
-  `onAuthenticated` callback. Wire your provider in `WatchPointNavHost`.
-- **No home screen.** The flow ends at the summary. That's the seam where the
-  actual product — journaling, breathing exercises, mood tracking — begins.
-
-## Copy changes
-
-Four typos in the deck were corrected in `strings.xml`: *daailly* → daily,
-*So glad to here that* → hear, *TouTube* → YouTube, *dificult* → difficult.
-Revert them in `strings.xml` if the originals were intentional.
+- `firestore.rules` scopes every read/write to `users/{uid}` - deploy it with
+  `firebase deploy --only firestore:rules` after any change.
+- The Room database is excluded from Android's automatic cloud backup and
+  device-to-device transfer (see `res/xml/backup_rules.xml` and
+  `res/xml/data_extraction_rules.xml`) since it's already backed up to
+  Firestore under the user's own account.
+- Settings → "Delete my account and data" removes the Firestore subtree and
+  the Firebase Auth account itself, alongside the local copy.

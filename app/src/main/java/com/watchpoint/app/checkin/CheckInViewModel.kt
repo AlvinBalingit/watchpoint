@@ -283,24 +283,4 @@ class CheckInViewModel(
         return messages
     }
 
-    /**
-     * Counts back from the most recent check-in rather than always from
-     * today, so a streak that ended yesterday (today just not checked in
-     * yet) still shows its real length instead of dropping to 0 the moment
-     * the clock rolls over to a new day.
-     */
-    private fun currentStreak(sortedDesc: List<CheckInEntry>): Int {
-        val mostRecent = sortedDesc.firstOrNull()?.date ?: return 0
-        var streak = 0
-        var expected = if (mostRecent.isBefore(LocalDate.now())) mostRecent else LocalDate.now()
-        for (entry in sortedDesc) {
-            if (entry.date == expected) {
-                streak++
-                expected = expected.minusDays(1)
-            } else if (entry.date.isBefore(expected)) {
-                break
-            }
-        }
-        return streak
-    }
 }

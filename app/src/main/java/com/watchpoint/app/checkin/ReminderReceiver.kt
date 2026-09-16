@@ -61,7 +61,7 @@ class ReminderReceiver : BroadcastReceiver() {
             context,
             if (isMotivational) ReminderScheduler.MOTIVATIONAL_CHANNEL_ID else ReminderScheduler.CHANNEL_ID
         )
-            .setSmallIcon(R.drawable.ic_mail)
+            .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(
                 context.getString(
                     if (isMotivational) R.string.motivational_notification_title

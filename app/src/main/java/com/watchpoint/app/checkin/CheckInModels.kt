@@ -60,3 +60,25 @@ data class CheckInEntry(
     val interactionTags: Set<InteractionTag> = emptySet(),
     val reflection: String? = null
 )
+
+/**
+ * Counts consecutive check-in days, most recent first. If today has no
+ * check-in yet, counting starts from yesterday instead of today, so a streak
+ * that's still technically unbroken (today just hasn't happened yet) doesn't
+ * show as 0 the moment the clock rolls over to a new day. Any other gap -
+ * two or more days since the last check-in - still zeroes the streak, same
+ * as before.
+ */
+fun currentStreak(sortedDesc: List<CheckInEntry>, today: LocalDate = LocalDate.now()): Int {
+    var streak = 0
+    var expected = if (sortedDesc.firstOrNull()?.date == today) today else today.minusDays(1)
+    for (entry in sortedDesc) {
+        if (entry.date == expected) {
+            streak++
+            expected = expected.minusDays(1)
+        } else if (entry.date.isBefore(expected)) {
+            break
+        }
+    }
+    return streak
+}
