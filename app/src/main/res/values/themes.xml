@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Compose draws the whole UI; this base theme only covers the pre-Compose
+         window (launch background + system bars) so there is no white flash. -->
+    <style name="Theme.WatchPoint" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/wp_forest</item>
+        <item name="android:statusBarColor">@color/wp_forest</item>
+        <item name="android:navigationBarColor">@color/wp_forest</item>
+    </style>
+</resources>

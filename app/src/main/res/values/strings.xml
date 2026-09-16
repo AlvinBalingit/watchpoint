@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WatchPoint</string>
+
+    <!-- Shared -->
+    <string name="brand">WatchPoint</string>
+    <string name="tagline">A Daily Mental Fitness\nCompanion for CCJEF Students!</string>
+    <string name="next">Next</string>
+    <string name="back">Back</string>
+
+    <!-- 01 Welcome -->
+    <string name="get_started">Get started!</string>
+    <string name="already_have_account">You already have an account</string>
+
+    <!-- 03 Wabby intro -->
+    <string name="wabby_greeting">Mabuhay, I\'m Wabby!</string>
+    <string name="wabby_greeting_sub">I\'m here to help you through your college journey!</string>
+
+    <!-- 04 Auth -->
+    <string name="email_label">Email</string>
+    <string name="password_label">Password</string>
+    <string name="confirm_password_label">Confirm Password</string>
+    <string name="first_name_label">First Name (optional)</string>
+    <string name="middle_initial_label">Middle Initial (optional)</string>
+    <string name="last_name_label">Last Name (optional)</string>
+    <string name="birthday_label">Birthday (optional)</string>
+    <string name="birthday_placeholder">MM/DD/YYYY</string>
+    <string name="create_account">Create Account</string>
+    <string name="sign_in">Sign In</string>
+    <string name="have_account_link">Already have an account? Sign in</string>
+    <string name="need_account_link">New here? Create an account</string>
+    <string name="legal_prefix">by continuing you agree with WatchPoint\'s</string>
+    <string name="legal_terms">Terms of Services</string>
+    <string name="legal_and">and</string>
+    <string name="legal_privacy">Privacy Policy.</string>
+    <string name="privacy_consent">I agree to the Privacy Policy and understand how my data is protected.</string>
+    <string name="privacy_consent_title">Your privacy matters</string>
+    <string name="privacy_consent_body">Your journal entries, exercise notes, and check-in data are intended to remain private to your account. WatchPoint uses reasonable technical safeguards and encryption in transit and at rest where supported by its service providers. We do not sell your personal information or your reflections. Only authorized access needed to provide the service is permitted, and no online service can promise absolute security.</string>
+    <string name="privacy_consent_accept">I understand and agree</string>
+
+    <!-- 05 Quote -->
+    <string name="quote_body">&#8220;Mental health… is not a destination,\nbut a process.\nIt\'s not about how you drive,\nnot where you\'re going.&#8221;</string>
+    <string name="quote_author">Noah Shpancer, PhD</string>
+
+    <!-- 06 Acquisition source -->
+    <string name="q_source">How did you first join WatchPoint?</string>
+    <string name="source_store_search">App Store Search</string>
+    <string name="source_store_recs">App Store Recommendations</string>
+    <string name="source_friend">Friend or Family Recommendation</string>
+    <string name="source_ad">Advertisement</string>
+    <string name="source_social">Blog / Social Media / YouTube</string>
+    <string name="source_other">Other</string>
+
+    <!-- 06b What brings you here -->
+    <string name="q_reason_for_using">What brings you to WatchPoint today?</string>
+    <string name="q_reason_for_using_sub">Choose all that apply</string>
+    <string name="reason_exam_stress">Academic Stress</string>
+    <string name="reason_fieldwork_adjustment">Adjusting to fieldwork or OJT</string>
+    <string name="reason_sleep_issues">Sleep issues</string>
+    <string name="reason_anxiety">Anxiety</string>
+    <string name="reason_relationship_challenges">Relationship challenges</string>
+    <string name="reason_big_life_change">A big life change</string>
+    <string name="reason_something_else">Something else</string>
+    <string name="confirm">Confirm</string>
+
+    <!-- 08 Mood check -->
+    <string name="q_mood">How have you been lately?</string>
+    <string name="mood_difficult">Going through something difficult recently</string>
+    <string name="mood_ongoing">Ongoing mental health challenges</string>
+    <string name="mood_okay">Doing okay</string>
+
+    <!-- 09 Reassurance -->
+    <string name="glad_title">We see and hear you!</string>
+    <string name="glad_body">You can keep up your well-being\nwith simple daily routines with us!</string>
+
+    <!-- 10 Final step -->
+    <string name="final_title">You\'re doing great. Final step!</string>
+    <string name="final_body">Let\'s personalize your WatchPoint routine\nbased on your program.</string>
+    <string name="final_note">The setup will be quick!</string>
+
+    <!-- 11 / 12 Sleep schedule -->
+    <string name="q_wake">When do you usually wake up?</string>
+    <string name="q_bed">When do you usually go to bed?</string>
+
+    <!-- 13 Interests -->
+    <string name="q_interests">Which of the following are you interested in practicing?</string>
+    <string name="q_interests_sub">Choose all that apply</string>
+    <string name="interest_breathing">Breathing Exercise</string>
+    <string name="interest_journaling">Journaling</string>
+    <string name="interest_meditation">Meditation</string>
+    <string name="interest_mood">Mood Tracking</string>
+    <string name="interest_selflove">Self-love</string>
+    <string name="interest_gratitude">Gratitude Practices</string>
+    <string name="interest_physical">Physical Activities</string>
+    <string name="interest_sleep">Better Sleep</string>
+    <string name="interest_productivity">Productivity</string>
+    <string name="interest_time_management">Time Management</string>
+    <string name="interest_social_connection">Social Connection</string>
+    <string name="interest_study_focus">Study Focus</string>
+    <string name="interest_emotional_awareness">Emotional Awareness</string>
+    <string name="interest_relaxation">Relaxation</string>
+    <string name="interest_goal_setting">Goal Setting</string>
+    <string name="interest_board_exam_prep">Board Exam Prep</string>
+
+    <!-- 14 Support system -->
+    <string name="q_support">How strong is your support system?</string>
+    <string name="q_support_sub">Family, friends, professors, peers, etc.</string>
+    <string name="support_excellent">Excellent</string>
+    <string name="support_good">Good</string>
+    <string name="support_limited">Limited</string>
+    <string name="support_poor">Poor</string>
+
+    <!-- 15 Age group -->
+    <string name="q_age">What is your age group?</string>
+    <string name="age_17_18">17 - 18 years old</string>
+    <string name="age_19_20">19 - 20 years old</string>
+    <string name="age_21_22">21 - 22 years old</string>
+    <string name="age_23_plus">23 years old and above</string>
+
+    <!-- 15b Academic program -->
+    <string name="q_program">What program are you in?</string>
+    <string name="program_criminology">Criminology</string>
+    <string name="program_forensic_science">Forensic Science</string>
+    <string name="program_other">Other</string>
+
+    <!-- 16 Summary -->
+    <string name="summary_title">You\'re all set!</string>
+    <string name="summary_body">Here\'s the routine profile we built with you.</string>
+    <string name="summary_enter">Enter WatchPoint</string>
+    <string name="summary_source">Found us via</string>
+    <string name="summary_mood">Feeling</string>
+    <string name="summary_wake">Wake up</string>
+    <string name="summary_bed">Bedtime</string>
+    <string name="summary_interests">Practising</string>
+    <string name="summary_support">Support system</string>
+    <string name="summary_age">Age group</string>
+    <string name="summary_program">Program</string>
+    <string name="summary_reasons">What brought you here</string>
+    <string name="not_set">Not set</string>
+
+    <!-- Time picker dialog -->
+    <string name="time_pick_title">Pick a time</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_back">Go back</string>
+    <string name="cd_mascot">Wabby, the WatchPoint mascot</string>
+    <string name="cd_selected">Selected</string>
+    <string name="cd_show_password">Show password</string>
+    <string name="cd_hide_password">Hide password</string>
+
+    <!-- Shared check-in controls -->
+    <string name="done">Done</string>
+    <string name="skip">Skip</string>
+
+    <!-- Home Dashboard -->
+    <string name="dashboard_title">Welcome back!</string>
+    <string name="todays_status">Today\'s Status</string>
+    <string name="no_checkin_yet">No check-in yet</string>
+    <string name="today">today</string>
+    <string name="last_checkin">Last check-in: %1$s</string>
+    <string name="start_checkin">Start Daily Check-In</string>
+    <string name="checked_in_today">Checked in today</string>
+    <string name="weekly_consistency">%1$d/%2$d days</string>
+    <string name="high_demand_mode">High-Demand Mode</string>
+    <string name="high_demand_mode_sub">Shorter check-ins for exam week or deadlines</string>
+    <string name="set_streak_goal">Set a Streak Goal</string>
+    <string name="change_streak_goal">Change Streak Goal</string>
+    <string name="view_exercises">Explore Exercises</string>
+    <string name="view_getting_started">Getting Started Program</string>
+    <string name="view_trends">View Trends</string>
+    <string name="view_weekly_summary">View Weekly Summary</string>
+    <string name="view_settings">Settings</string>
+    <string name="settings_terms">Terms of Service</string>
+    <string name="settings_privacy">Privacy Policy</string>
+    <string name="settings_edit_profile">Edit Profile</string>
+    <string name="settings_logout">Log Out</string>
+    <string name="profile_email_label">Email address</string>
+    <string name="profile_save">Save changes</string>
+    <string name="profile_cancel">Cancel</string>
+    <string name="logout_title">Log out of WatchPoint?</string>
+    <string name="logout_body">You can sign in again anytime with your account.</string>
+    <string name="logout_confirm">Log out</string>
+    <string name="settings_legal_subtitle">Learn how WatchPoint works and protects your information</string>
+    <string name="terms_title">Terms of Service</string>
+    <string name="terms_updated">Last updated: September 14, 2026</string>
+    <string name="terms_intro">By using WatchPoint, you agree to these terms. WatchPoint is a daily mental fitness and reflection companion for CCJEF students.</string>
+    <string name="terms_use_title">Using WatchPoint</string>
+    <string name="terms_use_body">Use the app honestly and only for your own personal, non-commercial well-being activities. Keep your account information accurate and do not attempt to access another person\'s account or disrupt the service.</string>
+    <string name="terms_content_title">Your entries</string>
+    <string name="terms_content_body">You keep ownership of the journal entries, exercise notes, and reflections you create. You give WatchPoint permission to store and process them only to provide the app\'s features, backup, and synchronization.</string>
+    <string name="terms_health_title">Not medical advice</string>
+    <string name="terms_health_body">WatchPoint is not a doctor, therapist, emergency service, or substitute for professional care. If you may be in immediate danger or need urgent help, contact local emergency services or a qualified mental-health professional.</string>
+    <string name="terms_availability_title">Service changes</string>
+    <string name="terms_availability_body">We may improve, change, suspend, or discontinue features when reasonably necessary. We will make reasonable efforts to protect your stored information and communicate material changes where appropriate.</string>
+    <string name="terms_contact_title">Questions</string>
+    <string name="terms_contact_body">For questions about these terms or your account, contact the WatchPoint support team through the app owner or organization that provided this application.</string>
+    <string name="privacy_title">Privacy Policy</string>
+    <string name="privacy_updated">Last updated: September 14, 2026</string>
+    <string name="privacy_intro">WatchPoint respects your privacy. This notice explains how personal information is handled in the Philippines under Republic Act No. 10173, the Data Privacy Act of 2012, and its implementing rules.</string>
+    <string name="privacy_collect_title">Information we collect</string>
+    <string name="privacy_collect_body">We may collect your account details, onboarding answers, check-in responses, journal entries, exercise notes, reminder preferences, and basic technical or synchronization information needed to operate the app.</string>
+    <string name="privacy_use_title">How we use information</string>
+    <string name="privacy_use_body">We use information to authenticate you, save your reflections, show your personal progress, provide reminders, improve app reliability, and synchronize your data when that feature is enabled. We do not use your journal or exercise notes for advertising.</string>
+    <string name="privacy_share_title">Sharing and disclosure</string>
+    <string name="privacy_share_body">We do not sell your personal information. We may share limited information with service providers that help operate authentication, storage, synchronization, or notifications, subject to appropriate confidentiality and security safeguards, or when required by law.</string>
+    <string name="privacy_retention_title">Storage and retention</string>
+    <string name="privacy_retention_body">Information is retained only as long as reasonably necessary to provide the service, meet legal obligations, resolve disputes, and protect the app. You may request correction or deletion of information, subject to applicable law and technical or legal limitations.</string>
+    <string name="privacy_security_title">Security</string>
+    <string name="privacy_security_body">We use reasonable organizational, physical, and technical safeguards to protect information from unauthorized access, loss, misuse, or disclosure. No online service can guarantee absolute security.</string>
+    <string name="privacy_rights_title">Your Philippine privacy rights</string>
+    <string name="privacy_rights_body">Under the Data Privacy Act, you may have rights to be informed, access, object, correct, erase or block, data portability, and to file a complaint with the National Privacy Commission. Requests may be subject to identity verification and legal exceptions.</string>
+    <string name="privacy_contact_title">Privacy questions and requests</string>
+    <string name="privacy_contact_body">To ask about your information or exercise your rights, contact the WatchPoint support team through the app owner or organization that provided this application. You may also contact the Philippine National Privacy Commission at privacy.gov.ph.</string>
+    <string name="mental_load_message">You may be experiencing increased mental load.</string>
+    <string name="current_streak">🔥 %1$d-day streak</string>
+
+    <string-array name="dashboard_encouragements">
+        <item>You\'ve got this!</item>
+        <item>Proud of you for showing up today.</item>
+        <item>Small steps still count.</item>
+        <item>Taking a moment for yourself matters.</item>
+        <item>One check-in at a time.</item>
+    </string-array>
+
+    <!-- Daily Check-In: mood -->
+    <string name="q_checkin_mood">How are you feeling today?</string>
+    <string name="mood_very_low">Very low</string>
+    <string name="mood_low">Low</string>
+    <string name="mood_neutral">Neutral</string>
+    <string name="mood_good">Good</string>
+    <string name="mood_great">Great</string>
+
+    <!-- Daily Check-In: stress -->
+    <string name="q_checkin_stress">How pressured do you feel today?</string>
+    <string name="q_checkin_stress_sub">1 is calm, 5 is very pressured</string>
+    <string name="stress_very_low">Not pressured at all</string>
+    <string name="stress_low">A little pressured</string>
+    <string name="stress_moderate">Moderately pressured</string>
+    <string name="stress_high">Quite pressured</string>
+    <string name="stress_very_high">Extremely pressured</string>
+
+    <!-- Daily Check-In: readiness -->
+    <string name="q_checkin_readiness">How ready do you feel today?</string>
+    <string name="q_checkin_readiness_sub">Think about academic tasks, focus and decision-making, and emotional control</string>
+    <string name="readiness_very_low">Not ready at all</string>
+    <string name="readiness_low">Slightly ready</string>
+    <string name="readiness_moderate">Moderately ready</string>
+    <string name="readiness_high">Quite ready</string>
+    <string name="readiness_very_high">Fully ready</string>
+
+    <!-- Daily Check-In: activity and interaction tagging -->
+    <string name="q_checkin_tags">Anything shaping today?</string>
+    <string name="q_checkin_tags_sub">Optional - pick anything that applies</string>
+    <string name="tags_activity_header">Activity Type</string>
+    <string name="activity_field_training">Field Training / OJT</string>
+    <string name="activity_board_review">Board Exam Review</string>
+    <string name="activity_cj_coursework">Criminal Justice Coursework (case studies, law subjects)</string>
+    <string name="activity_practicum">Practicum / Immersion</string>
+    <string name="activity_extracurricular">Extracurricular Activities</string>
+    <string name="tags_interaction_header">Interaction Context</string>
+    <string name="interaction_school">School-related interactions</string>
+    <string name="interaction_home_family">Home / Family-related interactions</string>
+    <string name="interaction_peer_social">Peer / Social interactions</string>
+    <string name="interaction_personal_relationships">Personal relationships</string>
+    <string name="interaction_personal_responsibilities">Personal responsibilities</string>
+    <string name="interaction_none">None / Not applicable</string>
+    <string name="q_checkin_reflection">Anything specific on your mind?</string>
+    <string name="q_checkin_reflection_placeholder">Describe what\'s stressing you out, if you\'d like…</string>
+
+    <!-- Check-in done -->
+    <string name="checkin_done_title">Thanks for checking in!</string>
+    <string name="back_to_dashboard">Back to Dashboard</string>
+    <string name="selfcare_section_title">Something to try</string>
+
+    <!-- Milestone celebration -->
+    <string name="milestone_banner">%1$d-day streak! 🎉</string>
+    <string name="milestone_celebration_title">You did it!</string>
+    <string name="milestone_celebration_subtitle">Look how far you\'ve come this week</string>
+    <string name="milestone_continue">Continue</string>
+
+    <!-- Streak goal -->
+    <string name="q_streak_goal">How many days in a row will you check in?</string>
+    <string name="q_streak_goal_sub">Pick a goal to work toward</string>
+    <string name="streak_goal_2_days">2 days</string>
+    <string name="streak_goal_2_label">Getting started</string>
+    <string name="streak_goal_5_days">5 days</string>
+    <string name="streak_goal_5_label">Building momentum</string>
+    <string name="streak_goal_7_days">7 days</string>
+    <string name="streak_goal_7_label">One full week</string>
+    <string name="streak_goal_14_days">14 days</string>
+    <string name="streak_goal_14_label">Two weeks strong</string>
+    <string name="streak_goal_committed">You\'re working toward a %1$d-day streak!</string>
+
+    <!-- Self-care suggestions -->
+    <string name="selfcare_breathing_title">Take a breathing break</string>
+    <string name="selfcare_breathing_body">Try 4 slow breaths in, hold, and out — it only takes a minute.</string>
+    <string name="selfcare_break_title">Give yourself a short break</string>
+    <string name="selfcare_break_body">Step away for five minutes before your next task.</string>
+    <string name="selfcare_gratitude_title">Notice one good thing</string>
+    <string name="selfcare_gratitude_body">Write down one small thing that went okay today.</string>
+    <string name="selfcare_journal_title">Jot down what\'s on your mind</string>
+    <string name="selfcare_journal_body">A few lines can help untangle a heavy day.</string>
+    <string name="selfcare_movement_title">Move a little</string>
+    <string name="selfcare_movement_body">A short walk or stretch can help reset your focus.</string>
+    <string name="selfcare_rest_title">Protect your rest tonight</string>
+    <string name="selfcare_rest_body">An earlier wind-down can make tomorrow easier.</string>
+
+    <!-- Exercise library -->
+    <string name="exercises_title">Exercises</string>
+    <string name="exercises_subtitle">Short practices you can try any time</string>
+    <string name="exercise_minutes">%1$d min</string>
+    <string name="exercise_done_badge">Done</string>
+    <string name="exercise_mark_done">Mark as Done</string>
+    <string name="exercise_completed_toast">Nice work! That\'s one more practice in.</string>
+    <string name="exercise_steps_header">Steps</string>
+
+    <string name="exercise_cat_breathing">Breathing</string>
+    <string name="exercise_cat_journaling">Journaling</string>
+    <string name="exercise_cat_grounding">Grounding</string>
+    <string name="exercise_cat_movement">Movement</string>
+    <string name="exercise_cat_rest">Rest</string>
+
+    <string name="exercise_breathing_title">4-Count Breathing</string>
+    <string name="exercise_breathing_desc">A slow breathing pattern to ease tension in a couple of minutes.</string>
+    <string name="exercise_breathing_step1">Breathe in slowly for 4 counts.</string>
+    <string name="exercise_breathing_step2">Hold gently for 4 counts.</string>
+    <string name="exercise_breathing_step3">Breathe out slowly for 4 counts.</string>
+    <string name="exercise_breathing_step4">Repeat 4-6 times, letting your shoulders drop.</string>
+
+    <string name="exercise_grounding_title">5-4-3-2-1 Grounding</string>
+    <string name="exercise_grounding_desc">Use your senses to settle back into the present moment.</string>
+    <string name="exercise_grounding_step1">Notice 5 things you can see.</string>
+    <string name="exercise_grounding_step2">Notice 4 things you can touch.</string>
+    <string name="exercise_grounding_step3">Notice 3 things you can hear.</string>
+    <string name="exercise_grounding_step4">Notice 2 things you can smell.</string>
+    <string name="exercise_grounding_step5">Notice 1 thing you can taste.</string>
+
+    <string name="exercise_gratitude_title">Gratitude Note</string>
+    <string name="exercise_gratitude_desc">A quick note to shift focus toward what\'s going okay.</string>
+    <string name="exercise_gratitude_step1">Think of one small thing that went well recently.</string>
+    <string name="exercise_gratitude_step2">Write a sentence about why it mattered.</string>
+    <string name="exercise_gratitude_step3">Read it back once before moving on.</string>
+
+    <string name="exercise_braindump_title">Brain Dump</string>
+    <string name="exercise_braindump_desc">Get everything out of your head and onto paper.</string>
+    <string name="exercise_braindump_step1">Set a timer for 3-5 minutes.</string>
+    <string name="exercise_braindump_step2">Write down everything on your mind, no editing.</string>
+    <string name="exercise_braindump_step3">Circle the one thing that actually needs action today.</string>
+
+    <string name="exercise_movement_title">Short Movement Break</string>
+    <string name="exercise_movement_desc">A quick reset for your body between tasks.</string>
+    <string name="exercise_movement_step1">Stand up and stretch your arms overhead.</string>
+    <string name="exercise_movement_step2">Walk for 5 minutes, indoors or outside.</string>
+    <string name="exercise_movement_step3">Notice how your body feels before you sit back down.</string>
+
+    <string name="exercise_rest_title">Wind-Down Routine</string>
+    <string name="exercise_rest_desc">A short routine to help you ease into rest.</string>
+    <string name="exercise_rest_step1">Dim the lights and put your phone aside.</string>
+    <string name="exercise_rest_step2">Take a few slow breaths.</string>
+    <string name="exercise_rest_step3">Think of one thing you\'re looking forward to tomorrow.</string>
+
+    <string name="exercise_bodyscan_title">Quick Body Scan</string>
+    <string name="exercise_bodyscan_desc">Notice where you\'re holding tension and release it.</string>
+    <string name="exercise_bodyscan_step1">Starting at your head, notice any tight spots.</string>
+    <string name="exercise_bodyscan_step2">Slowly move your attention down to your feet.</string>
+    <string name="exercise_bodyscan_step3">Take one deep breath and let your shoulders relax.</string>
+
+    <string name="exercise_preexam_title">Pre-Exam Reset</string>
+    <string name="exercise_preexam_desc">A quick reset to steady your nerves before a review session or board exam.</string>
+    <string name="exercise_preexam_step1">Put your reviewer down and sit up straight.</string>
+    <string name="exercise_preexam_step2">Take 4 slow breaths, in through your nose and out through your mouth.</string>
+    <string name="exercise_preexam_step3">Remind yourself of one topic you already know well.</string>
+    <string name="exercise_preexam_step4">Go back to reviewing one small section at a time.</string>
+
+    <!-- Exercise timer -->
+    <string name="exercise_note_placeholder">Write your note here…</string>
+    <string name="exercise_note_title_placeholder">Title your note</string>
+    <string name="exercise_note_required_title">Add your note first</string>
+    <string name="exercise_note_required_body">Please enter a title and write your note before marking this exercise as done.</string>
+    <string name="exercise_note_required_action">Continue writing</string>
+    <string name="exercise_timer_start">Start Timer</string>
+    <string name="exercise_timer_pause">Pause</string>
+    <string name="exercise_timer_resume">Resume</string>
+    <string name="exercise_timer_done">Time\'s up!</string>
+
+    <!-- Progress visual -->
+    <string name="garden_progress_label">%1$d%% grown</string>
+
+    <!-- Getting started program -->
+    <string name="getting_started_title">Getting Started</string>
+    <string name="getting_started_subtitle">A short 5-day path to build the check-in habit</string>
+    <string name="getting_started_day_label">Day %1$d of 5</string>
+    <string name="getting_started_complete_day">Complete Day %1$d</string>
+    <string name="getting_started_open_exercise">Try Today\'s Exercise First</string>
+    <string name="getting_started_finished_title">You finished the program!</string>
+    <string name="getting_started_finished_body">Keep checking in and exploring exercises to keep your progress growing.</string>
+
+    <string name="program_day1_title">Welcome In</string>
+    <string name="program_day1_prompt">Today, just take a moment to notice how you\'re feeling. No pressure to fix anything yet.</string>
+    <string name="program_day2_title">Naming the Feeling</string>
+    <string name="program_day2_prompt">Try putting today\'s mood into a word or two. Naming it is the first step to understanding it.</string>
+    <string name="program_day3_title">Coming Back to Now</string>
+    <string name="program_day3_prompt">When things feel like a lot, grounding can help bring you back to the present.</string>
+    <string name="program_day4_title">Moving Your Body</string>
+    <string name="program_day4_prompt">Even a short movement break can shift how the rest of your day feels.</string>
+    <string name="program_day5_title">Looking Back</string>
+    <string name="program_day5_prompt">Take a moment to notice what\'s felt different since Day 1.</string>
+
+    <!-- Trends -->
+    <string name="trends_title">Your Trends</string>
+    <string name="trends_tap_hint">Tap a point on any chart to see that day\'s value</string>
+    <string name="trends_7_day">7 days</string>
+    <string name="trends_14_day">14 days</string>
+    <string name="trends_mood">Mood</string>
+    <string name="trends_stress">Stress</string>
+    <string name="trends_readiness">Readiness</string>
+
+    <!-- Weekly summary -->
+    <string name="weekly_summary_title">Weekly Summary</string>
+    <string name="summary_avg_stress">Average stress</string>
+    <string name="summary_best_day">Best day</string>
+    <string name="summary_hardest_day">Hardest day</string>
+    <string name="weekly_reflection_prompt">What helped you most this week?</string>
+    <string name="weekly_reflection_placeholder">Write a few words…</string>
+
+    <!-- Journal -->
+    <string name="journal_title">My Journal</string>
+    <string name="journal_subtitle">Write whatever\'s on your mind - just for you.</string>
+    <string name="journal_entry_title_placeholder">Title your journal</string>
+    <string name="journal_placeholder">Write here…</string>
+    <string name="journal_save">Save Entry</string>
+    <string name="journal_update">Update Entry</string>
+    <string name="journal_cancel_edit">Cancel Edit</string>
+    <string name="journal_empty">No entries yet. Your first note will show up here.</string>
+    <string name="journal_entry_untitled">Untitled journal</string>
+    <string name="journal_edit">Edit</string>
+    <string name="journal_delete">Delete</string>
+    <string name="view_more">View more</string>
+    <string name="view_less">View less</string>
+    <string name="note_update">Update Note</string>
+    <string name="saved_note_title">Saved note</string>
+    <string name="note_edit">Edit</string>
+    <string name="note_delete">Delete</string>
+    <string name="dashboard_journal">My Journal</string>
+
+    <!-- Settings / reminders -->
+    <string name="settings_title">Settings</string>
+    <string name="reminder_toggle">Daily Check-In Reminder</string>
+    <string name="reminder_toggle_sub">A gentle nudge to check in each day</string>
+    <string name="reminder_time_label">Reminder time</string>
+    <string name="reminder_channel_name">Daily Check-In Reminder</string>
+    <string name="reminder_notification_title">Time for your daily check-in</string>
+    <string name="reminder_notification_body">Take a minute for yourself with WatchPoint.</string>
+    <string name="motivational_quotes_toggle">Motivational quotes</string>
+    <string name="motivational_quotes_toggle_sub">Receive an encouraging quote every 2 hours</string>
+    <string name="motivational_channel_name">Motivational quotes</string>
+    <string name="motivational_notification_title">A moment for you</string>
+    <string-array name="motivational_quotes">
+        <item>Small steps every day still get you to the badge.</item>
+        <item>You don\'t have to have it all figured out to check in today.</item>
+        <item>One step closer to the badge.</item>
+        <item>Discipline today, resilience tomorrow.</item>
+        <item>Your well-being is part of your training too.</item>
+        <item>Progress, not perfection - even on the hard days.</item>
+        <item>Future officers take care of their minds, too.</item>
+        <item>A calm mind makes for sharper judgment in the field.</item>
+        <item>Take a minute for yourself with WatchPoint.</item>
+        <item>Every check-in is a rep for your mental fitness.</item>
+        <item>You\'ve made it through every hard day so far.</item>
+        <item>Rest is part of the mission, not a break from it.</item>
+    </string-array>
+    <string-array name="motivational_quotes_low">
+        <item>You do not have to solve everything today. Just take one gentle step.</item>
+        <item>Hard days deserve patience, not pressure.</item>
+        <item>Showing up as you are is already a brave thing.</item>
+        <item>Take a breath. You are allowed to move at your own pace.</item>
+    </string-array>
+    <string-array name="motivational_quotes_neutral">
+        <item>A small check-in can help you meet the rest of the day with clarity.</item>
+        <item>Notice where you are, then choose one kind next step.</item>
+        <item>Steady progress counts, even when the day feels ordinary.</item>
+        <item>Give yourself a quiet moment before moving on.</item>
+    </string-array>
+    <string-array name="motivational_quotes_positive">
+        <item>Carry that good energy forward, one meaningful step at a time.</item>
+        <item>Celebrate the strength you are building today.</item>
+        <item>Your momentum matters. Keep making room for your well-being.</item>
+        <item>Let today\'s bright moment become fuel for the next one.</item>
+    </string-array>
+</resources>

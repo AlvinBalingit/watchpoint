@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "925728576922",
+    "project_id": "watchpoint-da5f3",
+    "storage_bucket": "watchpoint-da5f3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:925728576922:android:884420e80ac63ab5181623",
+        "android_client_info": {
+          "package_name": "com.watchpoint.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAl25V_jKjkKdYC9MBrJUJDyDBkBBQ5cYU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,13 @@
+package com.watchpoint.app.settings
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.watchpoint.app.data.repository.SettingsRepository
+
+class SettingsViewModelFactory(
+    private val repository: SettingsRepository
+) : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T =
+        SettingsViewModel(repository) as T
+}
