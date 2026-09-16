@@ -12,6 +12,7 @@ import com.watchpoint.app.onboarding.ReasonForUsing
 import com.watchpoint.app.onboarding.SupportLevel
 import com.watchpoint.app.onboarding.TimeOfDay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 /** Persists onboarding answers and whether onboarding has been completed. */
@@ -20,6 +21,9 @@ class OnboardingRepository(private val dao: OnboardingAnswersDao) {
     fun observeAnswers(): Flow<OnboardingAnswers?> = dao.observe().map { it?.toDomain() }
 
     fun observeIsOnboarded(): Flow<Boolean> = dao.observe().map { it?.completedAt != null }
+
+    /** One-shot read for routing right after sign-in, once the downloaded backup (if any) has landed. */
+    suspend fun isOnboarded(): Boolean = observeIsOnboarded().first()
 
     suspend fun save(answers: OnboardingAnswers) {
         dao.upsert(answers.toEntity(completedAt = System.currentTimeMillis()))

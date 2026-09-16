@@ -10,5 +10,6 @@
 .cxx
 *.jks
 *.keystore
+/keystore.properties
 scratch_*.png
 .kotlin/

@@ -188,7 +188,11 @@ class CheckInViewModel(
      * celebration screen) instead of racing the background write.
      */
     suspend fun submitCheckIn() {
-        val mood = draftMood ?: return
+        // Quick mode (highDemandMode) skips the mood step entirely, so there's
+        // no draft mood to require here - falling back to Neutral keeps the
+        // check-in from being silently dropped (it used to bail out at this
+        // point because draftMood was never set).
+        val mood = draftMood ?: if (highDemandMode) Mood.Neutral else return
         val stress = draftStress ?: return
         val readiness = draftReadiness ?: return
 

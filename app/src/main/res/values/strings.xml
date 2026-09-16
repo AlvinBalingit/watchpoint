@@ -182,6 +182,10 @@
     <string name="logout_title">Log out of WatchPoint?</string>
     <string name="logout_body">You can sign in again anytime with your account.</string>
     <string name="logout_confirm">Log out</string>
+    <string name="settings_delete_account">Delete my account and data</string>
+    <string name="delete_account_title">Delete your account?</string>
+    <string name="delete_account_body">This permanently deletes your account and all of your check-ins, journal entries, exercise notes, and settings from WatchPoint\'s servers and this device. This can\'t be undone.</string>
+    <string name="delete_account_confirm">Delete permanently</string>
     <string name="settings_legal_subtitle">Learn how WatchPoint works and protects your information</string>
     <string name="terms_title">Terms of Service</string>
     <string name="terms_updated">Last updated: September 14, 2026</string>

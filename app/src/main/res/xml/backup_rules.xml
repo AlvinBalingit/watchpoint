@@ -1,2 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<full-backup-content />
+<!-- The Room database holds private journal/check-in text; it's already backed up
+     to Firestore under the user's own account, so it's excluded here rather than
+     riding along in Android's device-level auto-backup. -->
+<full-backup-content>
+    <exclude domain="database" path="watchpoint.db" />
+    <exclude domain="database" path="watchpoint.db-wal" />
+    <exclude domain="database" path="watchpoint.db-shm" />
+</full-backup-content>

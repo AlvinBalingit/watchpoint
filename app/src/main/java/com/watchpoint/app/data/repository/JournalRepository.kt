@@ -21,8 +21,9 @@ class JournalRepository(private val dao: JournalEntryDao) {
         )
     }
 
+    /** Soft-deletes locally; the sync pass removes the Firestore copy and then hard-deletes this row. */
     suspend fun deleteEntry(id: Long) {
-        dao.delete(id)
+        dao.markPendingDelete(id)
     }
 
     suspend fun updateEntry(id: Long, title: String, text: String) {

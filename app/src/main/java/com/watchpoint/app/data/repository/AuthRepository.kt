@@ -20,6 +20,8 @@ class AuthRepository(private val authManager: FirebaseAuthManager) {
 
     fun signOut() = authManager.signOut()
 
+    suspend fun deleteAccount() = authManager.deleteAccount()
+
     suspend fun updateEmail(email: String) = authManager.updateEmail(email)
 
     suspend fun updateProfile(firstName: String, middleInitial: String, lastName: String, birthday: String) =

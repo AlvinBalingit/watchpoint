@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -21,10 +24,19 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file("../watchpoint-release.jks")
-            storePassword = "watchpoint123"
-            keyAlias = "watchpoint"
-            keyPassword = "watchpoint123"
+            val keystoreProps = Properties()
+            val keystorePropsFile = rootProject.file("keystore.properties")
+            if (keystorePropsFile.exists()) {
+                keystoreProps.load(FileInputStream(keystorePropsFile))
+            }
+            fun prop(key: String) =
+                (keystoreProps.getProperty(key) ?: System.getenv(key))
+                    ?: error("Missing $key: add it to keystore.properties (gitignored) or set env var $key")
+
+            storeFile = file(prop("WATCHPOINT_STORE_FILE"))
+            storePassword = prop("WATCHPOINT_STORE_PASSWORD")
+            keyAlias = prop("WATCHPOINT_KEY_ALIAS")
+            keyPassword = prop("WATCHPOINT_KEY_PASSWORD")
         }
     }
 

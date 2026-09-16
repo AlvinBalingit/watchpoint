@@ -97,7 +97,9 @@ fun WatchPointNavHost() {
         )
     )
     val settingsVm: SettingsViewModel = viewModel(factory = SettingsViewModelFactory(container.settingsRepository))
-    val authVm: AuthViewModel = viewModel(factory = AuthViewModelFactory(container.authRepository))
+    val authVm: AuthViewModel = viewModel(
+        factory = AuthViewModelFactory(container.authRepository, container.syncManager, container.onboardingRepository)
+    )
     val journalVm: JournalViewModel = viewModel(factory = JournalViewModelFactory(container.journalRepository))
 
     // The graph's start destination depends on whether the user is signed in
@@ -197,7 +199,17 @@ fun WatchPointNavHost() {
                 onBirthdayChange = authVm::updateBirthday,
                 onPrivacyConsentChange = authVm::updatePrivacyConsent,
                 onToggleMode = authVm::toggleMode,
-                onSubmit = { authVm.submit(onSuccess = { go(Route.QUOTE) }) },
+                onSubmit = {
+                    authVm.submit(onSuccess = { alreadyOnboarded ->
+                        if (alreadyOnboarded) {
+                            navController.navigate(Route.HOME) {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        } else {
+                            go(Route.QUOTE)
+                        }
+                    })
+                },
                 onOpenTerms = { go(Route.TERMS) },
                 onOpenPrivacy = { go(Route.PRIVACY) },
                 onBack = back
@@ -447,6 +459,7 @@ fun WatchPointNavHost() {
 
         composable(Route.SETTINGS) {
             val settings by settingsVm.settings.collectAsStateWithLifecycle()
+            val scope = rememberCoroutineScope()
             SettingsScreen(
                 reminderEnabled = settings.enabled,
                 motivationalQuotesEnabled = settings.motivationalQuotesEnabled,
@@ -464,8 +477,25 @@ fun WatchPointNavHost() {
                 onUpdateProfile = authVm::updateProfile,
                 onLogout = {
                     container.authRepository.signOut()
+                    scope.launch {
+                        container.clearLocalUserData()
+                    }
                     navController.navigate(Route.WELCOME) {
                         popUpTo(0) { inclusive = true }
+                    }
+                },
+                onDeleteAccount = { onComplete ->
+                    scope.launch {
+                        try {
+                            container.authRepository.deleteAccount()
+                            container.clearLocalUserData()
+                            onComplete(null)
+                            navController.navigate(Route.WELCOME) {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        } catch (e: Exception) {
+                            onComplete(e.message ?: "Unable to delete your account. Please try again.")
+                        }
                     }
                 },
                 onBack = back

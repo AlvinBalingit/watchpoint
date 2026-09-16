@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- The Room database holds private journal/check-in text; it's already backed up
+     to Firestore under the user's own account, so it's excluded here rather than
+     riding along in Android's cloud backup or device-to-device transfer. -->
 <data-extraction-rules>
-    <cloud-backup />
-    <device-transfer />
+    <cloud-backup>
+        <exclude domain="database" path="watchpoint.db" />
+        <exclude domain="database" path="watchpoint.db-wal" />
+        <exclude domain="database" path="watchpoint.db-shm" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="database" path="watchpoint.db" />
+        <exclude domain="database" path="watchpoint.db-wal" />
+        <exclude domain="database" path="watchpoint.db-shm" />
+    </device-transfer>
 </data-extraction-rules>

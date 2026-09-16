@@ -1,6 +1,7 @@
 package com.watchpoint.app.data.remote
 
 import android.util.Log
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.watchpoint.app.data.db.CheckInDao
@@ -48,6 +49,53 @@ class FirestoreSyncManager(
         syncOnboardingAnswers(uid)
         syncStreakGoal(uid)
         syncJournalEntries(uid)
+    }
+
+    /**
+     * Pulls this account's Firestore backup down into Room. Call once right
+     * after a successful sign-in - a fresh install or a new device otherwise
+     * has an empty local database even though a backup exists online, and
+     * onboarding gets repeated because onboarding_answers.completedAt is
+     * never populated locally. Downloaded rows are marked synced = true,
+     * since Firestore is where they already live.
+     */
+    suspend fun downloadAll(uid: String) {
+        runCatching {
+            val checkIns = firestore.collection("users").document(uid)
+                .collection("checkIns").get().await()
+            checkInDao.upsertAll(checkIns.documents.mapNotNull { it.toCheckInEntity() })
+        }.onFailure { Log.w(TAG, "Failed to download check-ins", it) }
+
+        runCatching {
+            val completions = firestore.collection("users").document(uid)
+                .collection("exerciseCompletions").get().await()
+            for (doc in completions.documents) {
+                doc.toExerciseCompletionEntity()?.let { exerciseCompletionDao.upsert(it) }
+            }
+        }.onFailure { Log.w(TAG, "Failed to download exercise completions", it) }
+
+        runCatching {
+            val doc = firestore.userDoc(uid, "programProgress", "singleton").get().await()
+            doc.toProgramProgressEntity()?.let { programProgressDao.upsert(it) }
+        }.onFailure { Log.w(TAG, "Failed to download program progress", it) }
+
+        runCatching {
+            val doc = firestore.userDoc(uid, "onboardingAnswers", "singleton").get().await()
+            doc.toOnboardingAnswersEntity()?.let { onboardingAnswersDao.upsert(it) }
+        }.onFailure { Log.w(TAG, "Failed to download onboarding answers", it) }
+
+        runCatching {
+            val doc = firestore.userDoc(uid, "streakGoal", "singleton").get().await()
+            doc.toStreakGoalEntity()?.let { streakGoalDao.upsert(it) }
+        }.onFailure { Log.w(TAG, "Failed to download streak goal", it) }
+
+        runCatching {
+            val entries = firestore.collection("users").document(uid)
+                .collection("journalEntries").get().await()
+            for (doc in entries.documents) {
+                doc.toJournalEntryEntity()?.let { journalEntryDao.upsert(it) }
+            }
+        }.onFailure { Log.w(TAG, "Failed to download journal entries", it) }
     }
 
     private suspend fun syncCheckIns(uid: String) {
@@ -111,6 +159,16 @@ class FirestoreSyncManager(
     }
 
     private suspend fun syncJournalEntries(uid: String) {
+        val pendingDeletes = journalEntryDao.getPendingDeletes()
+        for (entity in pendingDeletes) {
+            runCatching {
+                firestore.userDoc(uid, "journalEntries", entity.id.toString())
+                    .delete()
+                    .await()
+                journalEntryDao.hardDelete(entity.id)
+            }.onFailure { Log.w(TAG, "Failed to delete journal entry ${entity.id}", it) }
+        }
+
         val unsynced = journalEntryDao.getUnsynced()
         for (entity in unsynced) {
             runCatching {
@@ -177,4 +235,84 @@ class FirestoreSyncManager(
         "committedAt" to committedAt,
         "updatedAt" to updatedAt
     )
+
+    private fun DocumentSnapshot.toCheckInEntity(): CheckInEntity? {
+        if (!exists()) return null
+        return CheckInEntity(
+            date = getString("date") ?: id,
+            mood = getString("mood") ?: return null,
+            stress = getString("stress") ?: return null,
+            readiness = getString("readiness") ?: return null,
+            activityTagsCsv = getString("activityTags") ?: "",
+            interactionTagsCsv = getString("interactionTags") ?: "",
+            reflection = getString("reflection"),
+            synced = true,
+            updatedAt = getLong("updatedAt") ?: 0L
+        )
+    }
+
+    private fun DocumentSnapshot.toExerciseCompletionEntity(): ExerciseCompletionEntity? {
+        if (!exists()) return null
+        return ExerciseCompletionEntity(
+            id = id.toLongOrNull() ?: return null,
+            exerciseId = getString("exerciseId") ?: return null,
+            completedAt = getLong("completedAt") ?: 0L,
+            noteTitle = getString("noteTitle") ?: "",
+            noteText = getString("noteText") ?: "",
+            synced = true,
+            updatedAt = getLong("updatedAt") ?: 0L
+        )
+    }
+
+    private fun DocumentSnapshot.toProgramProgressEntity(): ProgramProgressEntity? {
+        if (!exists()) return null
+        return ProgramProgressEntity(
+            dayCompleted = (getLong("dayCompleted") ?: 0L).toInt(),
+            synced = true,
+            updatedAt = getLong("updatedAt") ?: 0L
+        )
+    }
+
+    private fun DocumentSnapshot.toOnboardingAnswersEntity(): OnboardingAnswersEntity? {
+        if (!exists()) return null
+        return OnboardingAnswersEntity(
+            source = getString("source"),
+            mood = getString("mood"),
+            wakeHour = (getLong("wakeHour") ?: 0L).toInt(),
+            wakeMinute = (getLong("wakeMinute") ?: 0L).toInt(),
+            bedHour = (getLong("bedHour") ?: 0L).toInt(),
+            bedMinute = (getLong("bedMinute") ?: 0L).toInt(),
+            interestsCsv = getString("interests") ?: "",
+            support = getString("support"),
+            ageGroup = getString("ageGroup"),
+            program = getString("program"),
+            reasonsForUsingCsv = getString("reasonsForUsing") ?: "",
+            completedAt = getLong("completedAt"),
+            synced = true,
+            updatedAt = getLong("updatedAt") ?: 0L
+        )
+    }
+
+    private fun DocumentSnapshot.toStreakGoalEntity(): StreakGoalEntity? {
+        if (!exists()) return null
+        return StreakGoalEntity(
+            targetDays = (getLong("targetDays") ?: 0L).toInt(),
+            committedAt = getLong("committedAt"),
+            synced = true,
+            updatedAt = getLong("updatedAt") ?: 0L
+        )
+    }
+
+    private fun DocumentSnapshot.toJournalEntryEntity(): JournalEntryEntity? {
+        if (!exists()) return null
+        return JournalEntryEntity(
+            id = id.toLongOrNull() ?: return null,
+            title = getString("title") ?: "",
+            text = getString("text") ?: return null,
+            createdAt = getLong("createdAt") ?: 0L,
+            synced = true,
+            updatedAt = getLong("updatedAt") ?: 0L,
+            pendingDelete = false
+        )
+    }
 }

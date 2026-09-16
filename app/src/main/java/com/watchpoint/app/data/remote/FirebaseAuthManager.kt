@@ -52,8 +52,35 @@ class FirebaseAuthManager(
         auth.signOut()
     }
 
+    /**
+     * Sends a verification link to the new address rather than switching
+     * immediately - plain updateEmail() is deprecated and fails outright on
+     * projects with Firebase's email enumeration protection enabled.
+     */
     suspend fun updateEmail(email: String) {
-        auth.currentUser?.updateEmail(email)?.await() ?: error("No signed-in user")
+        auth.currentUser?.verifyBeforeUpdateEmail(email)?.await() ?: error("No signed-in user")
+    }
+
+    /**
+     * Deletes this user's Firestore documents, then the Firebase Auth
+     * account itself. Auth deletion can require a recent sign-in
+     * (FirebaseAuthRecentLoginRequiredException); the caller surfaces that
+     * to the user rather than silently failing.
+     */
+    suspend fun deleteAccount() {
+        val user = auth.currentUser ?: error("No signed-in user")
+        val uid = user.uid
+        val subcollections = listOf(
+            "checkIns", "exerciseCompletions", "programProgress",
+            "onboardingAnswers", "streakGoal", "journalEntries"
+        )
+        val userDocRef = firestore.collection("users").document(uid)
+        for (name in subcollections) {
+            val docs = userDocRef.collection(name).get().await()
+            for (doc in docs.documents) doc.reference.delete().await()
+        }
+        userDocRef.delete().await()
+        user.delete().await()
     }
 
     suspend fun updateProfile(

@@ -9,13 +9,19 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.watchpoint.app.data.remote.FirestoreSyncManager
 import com.watchpoint.app.data.repository.AuthRepository
+import com.watchpoint.app.data.repository.OnboardingRepository
 import kotlinx.coroutines.launch
 
 enum class AuthMode { Register, SignIn }
 
 /** Owns the registration/sign-in form state; AuthScreen itself stays a dumb composable like every other screen. */
-class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
+class AuthViewModel(
+    private val repository: AuthRepository,
+    private val syncManager: FirestoreSyncManager,
+    private val onboardingRepository: OnboardingRepository
+) : ViewModel() {
 
     var mode by mutableStateOf(AuthMode.Register)
         private set
@@ -114,7 +120,13 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
         }
     }
 
-    fun submit(onSuccess: () -> Unit) {
+    /**
+     * [onSuccess] receives whether this account had already completed
+     * onboarding (always false for a fresh registration), so the caller can
+     * skip straight to Home for a returning user instead of re-running the
+     * first-time questions.
+     */
+    fun submit(onSuccess: (alreadyOnboarded: Boolean) -> Unit) {
         val validationError = validate()
         if (validationError != null) {
             errorMessage = validationError
@@ -125,15 +137,21 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
         errorMessage = null
         viewModelScope.launch {
             try {
+                var alreadyOnboarded = false
                 if (mode == AuthMode.Register) {
                     repository.register(email.trim(), password)
                     repository.updateProfile(
                         firstName.trim(), middleInitial.trim(), lastName.trim(), birthday.trim()
                     )
                 } else {
-                    repository.signIn(email.trim(), password)
+                    val uid = repository.signIn(email.trim(), password)
+                    // Pull this account's existing backup down before the user
+                    // sees any screen - otherwise a fresh install/new device
+                    // shows an empty history despite a backup existing online.
+                    syncManager.downloadAll(uid)
+                    alreadyOnboarded = onboardingRepository.isOnboarded()
                 }
-                onSuccess()
+                onSuccess(alreadyOnboarded)
             } catch (e: Exception) {
                 errorMessage = e.toUserMessage()
             } finally {

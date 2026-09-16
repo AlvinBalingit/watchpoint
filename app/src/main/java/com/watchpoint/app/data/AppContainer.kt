@@ -16,6 +16,8 @@ import com.watchpoint.app.data.repository.OnboardingRepository
 import com.watchpoint.app.data.repository.ProgramRepository
 import com.watchpoint.app.data.repository.SettingsRepository
 import com.watchpoint.app.data.repository.StreakGoalRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Manual service locator for the app's repositories - no DI framework is used
@@ -40,7 +42,7 @@ class AppContainer(context: Context) {
     )
     val authRepository = AuthRepository(authManager)
 
-    private val syncManager = FirestoreSyncManager(
+    val syncManager = FirestoreSyncManager(
         firestore = FirebaseFirestore.getInstance(),
         authManager = authManager,
         checkInDao = database.checkInDao(),
@@ -51,4 +53,17 @@ class AppContainer(context: Context) {
         journalEntryDao = database.journalEntryDao()
     )
     val syncTrigger = NetworkAwareSyncTrigger(context, syncManager, authManager)
+
+    /**
+     * Wipes this device's local copy of the signed-out user's account data
+     * (check-ins, journal, onboarding answers, etc.) so the next person to
+     * sign in on the same phone can't see it. Reminder preferences are
+     * device-level, not account data, so they're left alone. Firestore's
+     * copy is untouched - it belongs to the account, not the device.
+     */
+    suspend fun clearLocalUserData() {
+        withContext(Dispatchers.IO) {
+            database.clearAllTables()
+        }
+    }
 }

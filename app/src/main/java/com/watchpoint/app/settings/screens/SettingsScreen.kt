@@ -63,6 +63,7 @@ fun SettingsScreen(
     onOpenPrivacy: () -> Unit,
     onUpdateProfile: (String, String, String, String, String, (String?) -> Unit) -> Unit,
     onLogout: () -> Unit,
+    onDeleteAccount: ((String?) -> Unit) -> Unit,
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
@@ -70,6 +71,9 @@ fun SettingsScreen(
     var pendingNotificationAction by remember { mutableStateOf<(() -> Unit)?>(null) }
     var showProfileDialog by remember { mutableStateOf(false) }
     var showLogoutDialog by remember { mutableStateOf(false) }
+    var showDeleteAccountDialog by remember { mutableStateOf(false) }
+    var deleteAccountError by remember { mutableStateOf<String?>(null) }
+    var deletingAccount by remember { mutableStateOf(false) }
     var profileEmail by remember(currentEmail) { mutableStateOf(currentEmail.orEmpty()) }
     var profileFirstNameValue by remember(profileFirstName) { mutableStateOf(profileFirstName) }
     var profileMiddleInitialValue by remember(profileMiddleInitial) { mutableStateOf(profileMiddleInitial) }
@@ -228,6 +232,11 @@ fun SettingsScreen(
             label = stringResource(R.string.settings_logout),
             onClick = { showLogoutDialog = true }
         )
+        Spacer(Modifier.height(8.dp))
+        LegalSettingsRow(
+            label = stringResource(R.string.settings_delete_account),
+            onClick = { deleteAccountError = null; showDeleteAccountDialog = true }
+        )
         Spacer(Modifier.weight(1f))
     }
 
@@ -320,6 +329,46 @@ fun SettingsScreen(
             },
             dismissButton = {
                 TextButton(onClick = { showLogoutDialog = false }) {
+                    Text(stringResource(R.string.profile_cancel))
+                }
+            }
+        )
+    }
+
+    if (showDeleteAccountDialog) {
+        AlertDialog(
+            onDismissRequest = { if (!deletingAccount) showDeleteAccountDialog = false },
+            title = { Text(stringResource(R.string.delete_account_title)) },
+            text = {
+                Column {
+                    Text(stringResource(R.string.delete_account_body))
+                    if (deleteAccountError != null) {
+                        Spacer(Modifier.height(8.dp))
+                        Text(deleteAccountError.orEmpty(), color = MaterialTheme.colorScheme.error)
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    enabled = !deletingAccount,
+                    onClick = {
+                        deletingAccount = true
+                        onDeleteAccount { error ->
+                            deletingAccount = false
+                            if (error == null) {
+                                showDeleteAccountDialog = false
+                            } else {
+                                deleteAccountError = error
+                            }
+                        }
+                    }
+                ) { Text(stringResource(R.string.delete_account_confirm)) }
+            },
+            dismissButton = {
+                TextButton(
+                    enabled = !deletingAccount,
+                    onClick = { showDeleteAccountDialog = false }
+                ) {
                     Text(stringResource(R.string.profile_cancel))
                 }
             }
