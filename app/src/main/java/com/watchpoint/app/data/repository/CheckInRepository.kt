@@ -36,13 +36,22 @@ class CheckInRepository(private val dao: CheckInDao) {
 
     private fun CheckInEntity.toDomain() = CheckInEntry(
         date = LocalDate.parse(date),
-        mood = Mood.valueOf(mood),
-        stress = StressLevel.valueOf(stress),
-        readiness = Readiness.valueOf(readiness),
+        mood = mood.toEnumOrDefault(Mood.Neutral),
+        stress = stress.toEnumOrDefault(StressLevel.Moderate),
+        readiness = readiness.toEnumOrDefault(Readiness.Moderate),
         activityTags = activityTagsCsv.toEnumSet(),
         interactionTags = interactionTagsCsv.toEnumSet(),
         reflection = reflection
     )
+
+    /**
+     * Falls back to [default] rather than throwing when a saved row's string
+     * no longer matches a current enum constant (e.g. Mood/StressLevel was
+     * renamed in a later app version) - the same "don't crash on old data"
+     * treatment [toEnumSet] already gives activity/interaction tags below.
+     */
+    private inline fun <reified T : Enum<T>> String.toEnumOrDefault(default: T): T =
+        enumValues<T>().firstOrNull { it.name == this } ?: default
 
     /**
      * Parses a comma-joined set of enum names, silently dropping any name

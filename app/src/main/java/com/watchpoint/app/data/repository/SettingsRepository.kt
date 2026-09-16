@@ -28,4 +28,9 @@ class SettingsRepository(private val prefs: SettingsPreferences) {
     suspend fun setMotivationalQuotesEnabled(value: Boolean) = prefs.setMotivationalQuotesEnabled(value)
 
     suspend fun setReminderTime(value: TimeOfDay) = prefs.setReminderTime(value.hour, value.minute)
+
+    /** Device-level (not account) preference: whether Quick Mode is the default for the next check-in. */
+    val highDemandMode: Flow<Boolean> = prefs.state.map { it.highDemandMode }
+
+    suspend fun setHighDemandMode(value: Boolean) = prefs.setHighDemandMode(value)
 }

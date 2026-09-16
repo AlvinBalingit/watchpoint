@@ -16,6 +16,7 @@ import com.watchpoint.app.data.repository.OnboardingRepository
 import com.watchpoint.app.data.repository.ProgramRepository
 import com.watchpoint.app.data.repository.SettingsRepository
 import com.watchpoint.app.data.repository.StreakGoalRepository
+import com.watchpoint.app.data.repository.WeeklyReflectionRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -35,6 +36,7 @@ class AppContainer(context: Context) {
     val settingsRepository = SettingsRepository(settingsPreferences)
     val streakGoalRepository = StreakGoalRepository(database.streakGoalDao())
     val journalRepository = JournalRepository(database.journalEntryDao())
+    val weeklyReflectionRepository = WeeklyReflectionRepository(database.weeklyReflectionDao())
 
     private val authManager = FirebaseAuthManager(
         FirebaseAuth.getInstance(),

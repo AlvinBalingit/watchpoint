@@ -47,17 +47,19 @@ class OnboardingRepository(private val dao: OnboardingAnswersDao) {
     )
 
     private fun OnboardingAnswersEntity.toDomain() = OnboardingAnswers(
-        source = source?.let { JoinSource.valueOf(it) },
-        mood = mood?.let { MoodState.valueOf(it) },
+        source = source?.let { name -> JoinSource.entries.firstOrNull { it.name == name } },
+        mood = mood?.let { name -> MoodState.entries.firstOrNull { it.name == name } },
         wakeTime = TimeOfDay(wakeHour, wakeMinute),
         bedTime = TimeOfDay(bedHour, bedMinute),
         interests = if (interestsCsv.isBlank()) {
             emptySet()
         } else {
-            interestsCsv.split(",").filter { it.isNotBlank() }.map { Interest.valueOf(it) }.toSet()
+            interestsCsv.split(",").filter { it.isNotBlank() }
+                .mapNotNull { name -> Interest.entries.firstOrNull { it.name == name } }
+                .toSet()
         },
-        support = support?.let { SupportLevel.valueOf(it) },
-        ageGroup = ageGroup?.let { AgeGroup.valueOf(it) },
+        support = support?.let { name -> SupportLevel.entries.firstOrNull { it.name == name } },
+        ageGroup = ageGroup?.let { name -> AgeGroup.entries.firstOrNull { it.name == name } },
         program = program?.let { name -> Program.entries.firstOrNull { it.name == name } },
         reasonsForUsing = if (reasonsForUsingCsv.isBlank()) {
             emptySet()

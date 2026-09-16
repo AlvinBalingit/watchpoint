@@ -14,12 +14,11 @@ import java.util.Calendar
 /**
  * Schedules (and cancels) the daily check-in reminder via AlarmManager.
  *
- * There is no persistence layer yet, so this only re-arms the alarm for the
- * current app process - it will not survive a device reboot until the
- * reminder preference is backed by real storage and rescheduled from a boot
- * receiver. `setRepeating` (not exact-and-allow-while-idle) is intentional:
- * this is a wellness nudge, not a time-critical alarm, so it doesn't need the
- * SCHEDULE_EXACT_ALARM permission.
+ * AlarmManager alarms are cleared on reboot, so [BootReceiver] re-arms
+ * whichever of these are enabled (per SettingsPreferences) when the device
+ * finishes starting up. `setRepeating` (not exact-and-allow-while-idle) is
+ * intentional: this is a wellness nudge, not a time-critical alarm, so it
+ * doesn't need the SCHEDULE_EXACT_ALARM permission.
  */
 object ReminderScheduler {
 
@@ -70,8 +69,15 @@ object ReminderScheduler {
         alarmManager.cancel(pendingIntent(context))
     }
 
+    /**
+     * No-ops if the alarm is already pending. This is invoked every time the
+     * app opens (settings observer in WatchPointApplication), so without this
+     * check a frequent user would keep pushing the next quote 2 hours into
+     * the future and rarely - if ever - actually get one.
+     */
     fun scheduleMotivationalQuotes(context: Context) {
         ensureChannel(context)
+        if (motivationalPendingIntentIfExists(context) != null) return
         val alarmManager = context.getSystemService(AlarmManager::class.java)
         val firstNotification = System.currentTimeMillis() + 2 * 60 * 60 * 1000L
         alarmManager.setRepeating(
@@ -97,14 +103,23 @@ object ReminderScheduler {
         )
     }
 
-    private fun motivationalPendingIntent(context: Context): PendingIntent {
-        val intent = Intent(context, ReminderReceiver::class.java)
-            .putExtra(ReminderReceiver.EXTRA_MOTIVATIONAL, true)
-        return PendingIntent.getBroadcast(
+    private fun motivationalIntent(context: Context): Intent =
+        Intent(context, ReminderReceiver::class.java).putExtra(ReminderReceiver.EXTRA_MOTIVATIONAL, true)
+
+    private fun motivationalPendingIntent(context: Context): PendingIntent =
+        PendingIntent.getBroadcast(
             context,
             MOTIVATIONAL_REQUEST_CODE,
-            intent,
+            motivationalIntent(context),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-    }
+
+    /** Non-creating lookup, used only to detect whether an alarm is already pending. */
+    private fun motivationalPendingIntentIfExists(context: Context): PendingIntent? =
+        PendingIntent.getBroadcast(
+            context,
+            MOTIVATIONAL_REQUEST_CODE,
+            motivationalIntent(context),
+            PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
+        )
 }

@@ -14,7 +14,8 @@ data class SettingsState(
     val reminderEnabled: Boolean,
     val motivationalQuotesEnabled: Boolean,
     val reminderHour: Int,
-    val reminderMinute: Int
+    val reminderMinute: Int,
+    val highDemandMode: Boolean
 )
 
 /** Small key-value app preferences - reminder settings - kept in DataStore rather than a Room table. */
@@ -25,6 +26,7 @@ class SettingsPreferences(private val context: Context) {
         val MOTIVATIONAL_QUOTES_ENABLED = booleanPreferencesKey("motivational_quotes_enabled")
         val REMINDER_HOUR = intPreferencesKey("reminder_hour")
         val REMINDER_MINUTE = intPreferencesKey("reminder_minute")
+        val HIGH_DEMAND_MODE = booleanPreferencesKey("high_demand_mode")
     }
 
     val state: Flow<SettingsState> = context.dataStore.data.map { prefs ->
@@ -32,7 +34,8 @@ class SettingsPreferences(private val context: Context) {
             reminderEnabled = prefs[Keys.REMINDER_ENABLED] ?: true,
             motivationalQuotesEnabled = prefs[Keys.MOTIVATIONAL_QUOTES_ENABLED] ?: true,
             reminderHour = prefs[Keys.REMINDER_HOUR] ?: 19,
-            reminderMinute = prefs[Keys.REMINDER_MINUTE] ?: 0
+            reminderMinute = prefs[Keys.REMINDER_MINUTE] ?: 0,
+            highDemandMode = prefs[Keys.HIGH_DEMAND_MODE] ?: false
         )
     }
 
@@ -49,5 +52,9 @@ class SettingsPreferences(private val context: Context) {
             it[Keys.REMINDER_HOUR] = hour
             it[Keys.REMINDER_MINUTE] = minute
         }
+    }
+
+    suspend fun setHighDemandMode(value: Boolean) {
+        context.dataStore.edit { it[Keys.HIGH_DEMAND_MODE] = value }
     }
 }

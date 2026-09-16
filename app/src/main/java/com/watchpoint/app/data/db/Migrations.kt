@@ -98,3 +98,18 @@ val MIGRATION_8_9 = object : Migration(8, 9) {
         db.execSQL("ALTER TABLE journal_entries ADD COLUMN pendingDelete INTEGER NOT NULL DEFAULT 0")
     }
 }
+
+/** Adds the weekly_reflections table so the Weekly Summary's reflection box actually persists. */
+val MIGRATION_9_10 = object : Migration(9, 10) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS weekly_reflections (
+                weekStart TEXT NOT NULL PRIMARY KEY,
+                text TEXT NOT NULL,
+                updatedAt INTEGER NOT NULL DEFAULT 0
+            )
+            """.trimIndent()
+        )
+    }
+}

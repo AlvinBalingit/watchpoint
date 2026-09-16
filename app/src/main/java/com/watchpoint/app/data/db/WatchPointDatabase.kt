@@ -12,9 +12,10 @@ import androidx.room.RoomDatabase
         ExerciseCompletionEntity::class,
         ProgramProgressEntity::class,
         StreakGoalEntity::class,
-        JournalEntryEntity::class
+        JournalEntryEntity::class,
+        WeeklyReflectionEntity::class
     ],
-    version = 9,
+    version = 10,
     exportSchema = false
 )
 abstract class WatchPointDatabase : RoomDatabase() {
@@ -24,6 +25,7 @@ abstract class WatchPointDatabase : RoomDatabase() {
     abstract fun programProgressDao(): ProgramProgressDao
     abstract fun streakGoalDao(): StreakGoalDao
     abstract fun journalEntryDao(): JournalEntryDao
+    abstract fun weeklyReflectionDao(): WeeklyReflectionDao
 
     companion object {
         @Volatile
@@ -35,7 +37,7 @@ abstract class WatchPointDatabase : RoomDatabase() {
                     context.applicationContext,
                     WatchPointDatabase::class.java,
                     "watchpoint.db"
-                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9).build().also { instance = it }
+                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10).build().also { instance = it }
             }
     }
 }

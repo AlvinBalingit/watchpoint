@@ -9,8 +9,10 @@ import com.watchpoint.app.data.db.ExerciseCompletionEntity
 import com.watchpoint.app.data.repository.CheckInRepository
 import com.watchpoint.app.data.repository.ExerciseRepository
 import com.watchpoint.app.data.repository.ProgramRepository
+import com.watchpoint.app.data.repository.SettingsRepository
 import com.watchpoint.app.data.repository.StreakGoal
 import com.watchpoint.app.data.repository.StreakGoalRepository
+import com.watchpoint.app.data.repository.WeeklyReflectionRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -43,7 +45,9 @@ class CheckInViewModel(
     private val checkInRepository: CheckInRepository,
     private val exerciseRepository: ExerciseRepository,
     private val programRepository: ProgramRepository,
-    private val streakGoalRepository: StreakGoalRepository
+    private val streakGoalRepository: StreakGoalRepository,
+    private val weeklyReflectionRepository: WeeklyReflectionRepository,
+    private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
     companion object {
@@ -75,6 +79,13 @@ class CheckInViewModel(
     val streakGoal: StateFlow<StreakGoal?> = streakGoalRepository.observeGoal()
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
+    val weeklyReflection: StateFlow<String> = weeklyReflectionRepository.observeForWeekOf(LocalDate.now())
+        .stateIn(viewModelScope, SharingStarted.Eagerly, "")
+
+    fun saveWeeklyReflection(text: String) {
+        viewModelScope.launch { weeklyReflectionRepository.save(LocalDate.now(), text) }
+    }
+
     /** Single reactive source for everything the Dashboard shows - recomputes on any relevant change. */
     val dashboardState: StateFlow<DashboardState> = combine(history, exerciseCompletionCount) { history, exerciseCount ->
         val sortedDesc = history.sortedByDescending { it.date }
@@ -103,8 +114,13 @@ class CheckInViewModel(
         DashboardState(null, false, 0, 0 to 7, emptySet(), false, 0)
     )
 
-    var highDemandMode by mutableStateOf(false)
-        private set
+    /**
+     * Persisted via SettingsRepository/DataStore (not plain Compose state) so
+     * the choice survives process death instead of silently resetting to off
+     * every time the app is reopened.
+     */
+    val highDemandMode: StateFlow<Boolean> = settingsRepository.highDemandMode
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     // ---- draft answers for the check-in in progress - transient, not persisted ----
 
@@ -156,7 +172,7 @@ class CheckInViewModel(
     }
 
     fun selectHighDemandMode(value: Boolean) {
-        highDemandMode = value
+        viewModelScope.launch { settingsRepository.setHighDemandMode(value) }
     }
 
     fun completeExercise(id: String, noteTitle: String = "", noteText: String = "") {
@@ -192,7 +208,7 @@ class CheckInViewModel(
         // no draft mood to require here - falling back to Neutral keeps the
         // check-in from being silently dropped (it used to bail out at this
         // point because draftMood was never set).
-        val mood = draftMood ?: if (highDemandMode) Mood.Neutral else return
+        val mood = draftMood ?: if (highDemandMode.value) Mood.Neutral else return
         val stress = draftStress ?: return
         val readiness = draftReadiness ?: return
 
@@ -267,9 +283,16 @@ class CheckInViewModel(
         return messages
     }
 
+    /**
+     * Counts back from the most recent check-in rather than always from
+     * today, so a streak that ended yesterday (today just not checked in
+     * yet) still shows its real length instead of dropping to 0 the moment
+     * the clock rolls over to a new day.
+     */
     private fun currentStreak(sortedDesc: List<CheckInEntry>): Int {
+        val mostRecent = sortedDesc.firstOrNull()?.date ?: return 0
         var streak = 0
-        var expected = LocalDate.now()
+        var expected = if (mostRecent.isBefore(LocalDate.now())) mostRecent else LocalDate.now()
         for (entry in sortedDesc) {
             if (entry.date == expected) {
                 streak++

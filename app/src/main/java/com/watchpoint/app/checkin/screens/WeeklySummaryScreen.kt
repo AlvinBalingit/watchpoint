@@ -20,10 +20,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
@@ -47,10 +43,11 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun WeeklySummaryScreen(
     history: List<CheckInEntry>,
+    weeklyReflection: String,
+    onWeeklyReflectionChange: (String) -> Unit,
     onBack: () -> Unit
 ) {
     val week = history.sortedByDescending { it.date }.take(7)
-    var reflection by remember { mutableStateOf("") }
 
     WpScreen(onBack = onBack) {
         Column(Modifier.verticalScroll(rememberScrollState())) {
@@ -104,8 +101,8 @@ fun WeeklySummaryScreen(
             )
             Spacer(Modifier.height(10.dp))
             OutlinedTextField(
-                value = reflection,
-                onValueChange = { reflection = it },
+                value = weeklyReflection,
+                onValueChange = onWeeklyReflectionChange,
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text(stringResource(R.string.weekly_reflection_placeholder)) },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),

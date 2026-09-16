@@ -93,7 +93,9 @@ fun WatchPointNavHost() {
             container.checkInRepository,
             container.exerciseRepository,
             container.programRepository,
-            container.streakGoalRepository
+            container.streakGoalRepository,
+            container.weeklyReflectionRepository,
+            container.settingsRepository
         )
     )
     val settingsVm: SettingsViewModel = viewModel(factory = SettingsViewModelFactory(container.settingsRepository))
@@ -217,7 +219,16 @@ fun WatchPointNavHost() {
         }
 
         composable(Route.QUOTE) {
-            QuoteScreen(onBack = back, onNext = { go(Route.REASON_FOR_USING) })
+            QuoteScreen(onBack = back, onNext = { go(Route.SOURCE) })
+        }
+
+        composable(Route.SOURCE) {
+            SourceScreen(
+                selected = vm.source,
+                onSelect = vm::selectSource,
+                onBack = back,
+                onNext = { go(Route.REASON_FOR_USING) }
+            )
         }
 
         composable(Route.REASON_FOR_USING) {
@@ -324,6 +335,7 @@ fun WatchPointNavHost() {
         composable(Route.HOME) {
             val dashboardState by checkInVm.dashboardState.collectAsStateWithLifecycle()
             val streakGoal by checkInVm.streakGoal.collectAsStateWithLifecycle()
+            val highDemandMode by checkInVm.highDemandMode.collectAsStateWithLifecycle()
             DashboardScreen(
                 latestEntry = dashboardState.latestEntry,
                 todayCheckedIn = dashboardState.todayCheckedIn,
@@ -333,10 +345,10 @@ fun WatchPointNavHost() {
                 gardenProgress = dashboardState.gardenProgress,
                 hasStreakGoal = streakGoal != null,
                 mentalLoadWarning = dashboardState.mentalLoadWarning,
-                highDemandMode = checkInVm.highDemandMode,
+                highDemandMode = highDemandMode,
                 onHighDemandModeChange = checkInVm::selectHighDemandMode,
                 onStartCheckIn = {
-                    if (checkInVm.highDemandMode) go(Route.CHECKIN_STRESS) else go(Route.CHECKIN_MOOD)
+                    if (highDemandMode) go(Route.CHECKIN_STRESS) else go(Route.CHECKIN_MOOD)
                 },
                 onViewTrends = { go(Route.TRENDS) },
                 onViewWeeklySummary = { go(Route.WEEKLY_SUMMARY) },
@@ -360,7 +372,7 @@ fun WatchPointNavHost() {
         }
 
         composable(Route.CHECKIN_STRESS) {
-            val highDemand = checkInVm.highDemandMode
+            val highDemand by checkInVm.highDemandMode.collectAsStateWithLifecycle()
             StressStepScreen(
                 selected = checkInVm.draftStress,
                 onSelect = {
@@ -374,7 +386,7 @@ fun WatchPointNavHost() {
         }
 
         composable(Route.CHECKIN_READINESS) {
-            val highDemand = checkInVm.highDemandMode
+            val highDemand by checkInVm.highDemandMode.collectAsStateWithLifecycle()
             val scope = rememberCoroutineScope()
             ReadinessStepScreen(
                 selected = checkInVm.draftReadiness,
@@ -454,7 +466,13 @@ fun WatchPointNavHost() {
 
         composable(Route.WEEKLY_SUMMARY) {
             val history by checkInVm.history.collectAsStateWithLifecycle()
-            WeeklySummaryScreen(history = history, onBack = back)
+            val weeklyReflection by checkInVm.weeklyReflection.collectAsStateWithLifecycle()
+            WeeklySummaryScreen(
+                history = history,
+                weeklyReflection = weeklyReflection,
+                onWeeklyReflectionChange = checkInVm::saveWeeklyReflection,
+                onBack = back
+            )
         }
 
         composable(Route.SETTINGS) {
